@@ -22,19 +22,22 @@ end
 
 (1..50).each do |i|
   user = User.find(i)
-  order = Order.new(user: user)
 
-  (1..10).each do |j|
-    product = Product.find(j + 50)
-    qty     = rand(50) + 1
-    order.orders_products.new(
-      product: product,
-      quantity: qty,
-      cost: qty * product.unit_price
-    )
+  (1..rand(50) + 1).each do |j|
+    order = Order.new(user: user)
+
+    (1..10).each do |k|
+      product = Product.find(k + 50)
+      qty     = rand(50) + 1
+      order.orders_products.new(
+        product: product,
+        quantity: qty,
+        cost: qty * product.unit_price
+      )
+    end
+
+    order.amount = order.orders_products.map(&:cost).reduce(:+)
+
+    order.save!
   end
-
-  order.amount = order.orders_products.map(&:cost).reduce(:+)
-
-  order.save!
 end
